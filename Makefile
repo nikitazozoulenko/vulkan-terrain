@@ -6,9 +6,15 @@ LDFLAGS = -L$(VULKAN_SDK_PATH)/lib `pkg-config --static --libs glfw3` -lvulkan
 VulkanTest: main.cpp
 	g++ $(CFLAGS) -o VulkanTest main.cpp $(LDFLAGS)
 
-.PHONY: test clean
+VulkanDebug: main.cpp
+	g++ $(CFLAGS) -g -o VulkanTest main.cpp $(LDFLAGS)
+
+.PHONY: test clean debug
 
 test: VulkanTest
+	LD_LIBRARY_PATH=$(VULKAN_SDK_PATH)/lib VK_LAYER_PATH=$(VULKAN_SDK_PATH)/etc/explicit_layer.d ./VulkanTest
+
+debug: VulkanDebug
 	LD_LIBRARY_PATH=$(VULKAN_SDK_PATH)/lib VK_LAYER_PATH=$(VULKAN_SDK_PATH)/etc/explicit_layer.d ./VulkanTest
 
 clean:
